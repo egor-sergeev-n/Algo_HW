@@ -19,10 +19,7 @@ public:
 		capacity(s),
 		comp(cmp)
 	{
-		/*std::cout << "Heap ctor\n";
-		this->display();*/
 		build_heap();
-		//this->display();
 	};
 
 	~Heap()
@@ -89,16 +86,6 @@ public:
 		return (size == 0);
 	}
 
-	/*void display()
-	{
-		std::cout << "HEAP : ";
-		for (size_t i = 0; i < size; ++i)
-		{
-			arr[i].display();
-		}
-		std::cout << std::endl;
-	}*/
-
 private:
 	bool fool() const
 	{
@@ -144,20 +131,7 @@ private:
 			if (largest == idx)
 				return;
 
-			/*std::cout << "SWAPPING\n";
-			arr[idx].display();
-			std::cout << std::endl;
-			arr[largest].display();
-			std::cout << std::endl;*/
-
 			std::swap(arr[idx], arr[largest]);
-
-			/*std::cout << "AFTERSWAPPING\n";
-			arr[idx].display();
-			std::cout << std::endl;
-			arr[largest].display();
-			std::cout << std::endl;*/
-
 			idx = largest;
 		}
 	}
@@ -166,64 +140,6 @@ private:
 	size_t size, capacity;
 	bool (*comp) (const T&, const T&);
 };
-
-
-//template<class T>
-//struct Array
-//{
-//	T* ptr;
-//	size_t size, idx;
-//
-//	Array() : ptr(nullptr), size(0), idx(0) { std::cout << "1 ctor\n"; }
-//	Array(T* p, size_t s) : ptr(p), size(s), idx(0) { std::cout << "2 ctor\n"; }
-//	Array(Array&& o) noexcept :
-//		ptr(std::move(o.ptr)),
-//		size(std::exchange(o.size, 0)),
-//		idx(std::exchange(o.idx, 0))
-//	{ }
-//	//Array(const T& t) : ptr(t.ptr), size(t.size), idx(t.idx) { std::cout << "3 ctor\n"; }
-//
-//	/*friend void swap(Array& lhs, Array& rhs) {
-//		std::swap(lhs.ptr, rhs.ptr);
-//		std::swap(lhs.size, rhs.size);
-//		std::swap(lhs.idx, rhs.idx);
-//	}*/
-//
-//	/*Array& operator=(Array other)
-//	{
-//		std::cout << "Operator=\n";
-//		swap(*this, other);
-//		return *this;
-//	}*/
-//	Array& operator=(const Array& other)
-//	{
-//		ptr = other.ptr;
-//		//t.ptr = nullptr;
-//		size = other.size;
-//		idx = other.idx;
-//		return *this;
-//	}
-//
-//	~Array()
-//	{
-//		std::cout << "Array dtor\n";
-//		delete[] ptr;
-//	}
-//
-//	void display() const
-//	{
-//		std::cout << "[";
-//		for (size_t i = 0; i < size; ++i)
-//			std::cout << ptr[i] << ' ';
-//		std::cout << "]";
-//	}
-//
-//	const T& value() const
-//	{
-//		return ptr[idx];
-//	}
-//};
-
 
 template<class T>
 struct ArrayStruct
@@ -239,13 +155,6 @@ struct ArrayStruct
 template<class T>
 void merge_k_arrays(T** arr, size_t* sizes, size_t k, T* arr_to_sort, size_t n)
 {
-	/*std::cout << "merge_k_arrays\n";
-	for (size_t i = 0; i < k; ++i)
-	{
-		arr[i].display();
-		std::cout << std::endl;
-	}*/
-
 	ArrayStruct<T>* first_vals = new ArrayStruct<T>[k];
 	for (size_t i = 0; i < k; ++i)
 	{
@@ -255,11 +164,9 @@ void merge_k_arrays(T** arr, size_t* sizes, size_t k, T* arr_to_sort, size_t n)
 
 	Heap<ArrayStruct<T>> heap(first_vals, k, [](const ArrayStruct<T>& lhs, const ArrayStruct<T>& rhs)
 								{return lhs.val < rhs.val ; });
-	//heap.display();
 
 	for (size_t i = 0; i < n; ++i)
 	{
-		//heap.display();
 		ArrayStruct<T> min = heap.top();
 		arr_to_sort[i] = min.val;
 		heap.pop();
