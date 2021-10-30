@@ -1,5 +1,10 @@
-﻿#include <iostream>
-#include <Assert.h>
+﻿//4.1.Слияние массивов
+//Напишите программу, которая использует кучу для слияния K отсортированных массивов суммарной длиной N.
+//Сначала вводится количество массивов K.
+//Затем по очереди размер каждого массива и элементы массива.
+//Каждый массив упорядочен по возрастанию.
+#include <iostream>
+#include <assert.h>
 #include <sstream>
 #define INCREASE_FACTOR 2
 
@@ -12,7 +17,7 @@ public:
 		size(0),
 		capacity(0),
 		comp(cmp) {};
-	
+
 	Heap(T* a, size_t s, bool (*cmp) (const T&, const T&) = [](const T& lhs, const T& rhs) { return lhs < rhs; }) :
 		arr(a),
 		size(s),
@@ -57,7 +62,7 @@ public:
 			if (capacity == 0)
 			{
 				capacity = 1;
-				arr = new T;
+				arr = new T[1];
 			}
 			else
 			{
@@ -65,7 +70,7 @@ public:
 				T* new_arr = new T[capacity];
 				for (size_t i = 0; i < size; ++i)
 					new_arr[i] = arr[i];
-				
+
 				delete[] arr;
 				arr = new_arr;
 			}
@@ -163,7 +168,7 @@ void merge_k_arrays(T** arr, size_t* sizes, size_t k, T* arr_to_sort, size_t n)
 	}
 
 	Heap<ArrayStruct<T>> heap(first_vals, k, [](const ArrayStruct<T>& lhs, const ArrayStruct<T>& rhs)
-								{return lhs.val < rhs.val ; });
+	{return lhs.val < rhs.val; });
 
 	for (size_t i = 0; i < n; ++i)
 	{
@@ -186,8 +191,8 @@ void merge_from_stream(std::istream& in, std::ostream& out)
 	size_t k = 0, n = 0;
 	in >> k;
 
-	int** arrays = new int*[k];
-	size_t *sizes = new size_t[k];
+	int** arrays = new int* [k];
+	size_t* sizes = new size_t[k];
 	for (size_t i = 0; i < k; ++i)
 	{
 		in >> sizes[i];
