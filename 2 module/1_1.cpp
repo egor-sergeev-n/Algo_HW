@@ -232,7 +232,7 @@ void processRequest(std::istream &in, std::ostream &out)
             break;
         }
 
-        std::cout << (res ? "OK" : "FAIL") << '\n';
+        out << (res ? "OK" : "FAIL") << '\n';
     }
 }
 
