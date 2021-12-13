@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <sstream>
 #include <string>
+#include <stack>
 
 struct DefaultComparator
 {
@@ -29,7 +30,33 @@ class BinaryTree
 
 public:
     BinaryTree(Comparator c = Comparator()) : root(nullptr), comp(c) {}
-    ~BinaryTree() {}
+    ~BinaryTree()
+    {
+        if (root == nullptr)
+            return;
+
+        std::stack<Node *> s1;
+        std::stack<Node *> s2;
+
+        s1.push(root);
+        while (!s1.empty())
+        {
+            Node *elem = s1.top();
+            s1.pop();
+            s2.push(elem);
+            if (elem->left != nullptr)
+                s1.push(elem->left);
+            if (elem->right != nullptr)
+                s1.push(elem->right);
+        }
+
+        while (!s2.empty())
+        {
+            Node *elem = s2.top();
+            s2.pop();
+            delete elem;
+        }
+    }
 
     void insert(const int key)
     {
