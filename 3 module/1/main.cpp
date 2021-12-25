@@ -1,92 +1,92 @@
 #include <iostream>
 #include <vector>
-#include <queue>
+#include "assert.h"
 #include "IGraph.h"
 #include "ListGraph.h"
+#include "MatrixGraph.h"
+#include "SetGraph.h"
+#include "ArcGraph.h"
 
-/* void testAnyGraph(const IGraph &graph)
+template <class Graph>
+void testGraphMethods()
 {
+    IGraph *graph = new Graph(5);
+
+    graph->AddEdge(0, 2);
+    graph->AddEdge(1, 0);
+    graph->AddEdge(1, 2);
+    graph->AddEdge(1, 3);
+    graph->AddEdge(2, 3);
+    graph->AddEdge(3, 4);
+    graph->AddEdge(4, 2);
+    graph->AddEdge(4, 3);
+
+    assert(graph->VerticesCount() == 5);
+    assert(graph->GetNextVertices(0) == std::vector<int>({2}));
+    assert(graph->GetNextVertices(1) == std::vector<int>({0, 2, 3}));
+    assert(graph->GetNextVertices(2) == std::vector<int>({3}));
+    assert(graph->GetNextVertices(3) == std::vector<int>({4}));
+    assert(graph->GetNextVertices(4) == std::vector<int>({2, 3}));
+
+    assert(graph->GetPrevVertices(0) == std::vector<int>({1}));
+    assert(graph->GetPrevVertices(1) == std::vector<int>());
+    assert(graph->GetPrevVertices(2) == std::vector<int>({0, 1, 4}));
+    assert(graph->GetPrevVertices(3) == std::vector<int>({1, 2, 4}));
+    assert(graph->GetPrevVertices(4) == std::vector<int>({3}));
+
+    delete graph;
 }
 
-void test()
+template <class Graph>
+void testGraphCopyCtor()
 {
-    {
-    }
+    IGraph *graph = new ListGraph(5);
 
-    std::cout << "Tests passed\n";
-} */
+    graph->AddEdge(0, 2);
+    graph->AddEdge(1, 0);
+    graph->AddEdge(1, 2);
+    graph->AddEdge(1, 3);
+    graph->AddEdge(2, 3);
+    graph->AddEdge(3, 4);
+    graph->AddEdge(4, 2);
+    graph->AddEdge(4, 3);
 
-void dfs_aux(const IGraph &graph, const int vertex, std::vector<bool> &visited, void (*callback)(int v))
-{
-    visited[vertex] = true;
-    callback(vertex);
+    Graph new_graph(*graph);
+    assert(new_graph.VerticesCount() == 5);
+    assert(new_graph.GetNextVertices(0) == std::vector<int>({2}));
+    assert(new_graph.GetNextVertices(1) == std::vector<int>({0, 2, 3}));
+    assert(new_graph.GetNextVertices(2) == std::vector<int>({3}));
+    assert(new_graph.GetNextVertices(3) == std::vector<int>({4}));
+    assert(new_graph.GetNextVertices(4) == std::vector<int>({2, 3}));
 
-    std::vector<int> children = graph.GetNextVertices(vertex);
-    for (auto &child : children)
-        if (!visited[child])
-            dfs_aux(graph, child, visited, callback);
+    assert(new_graph.GetPrevVertices(0) == std::vector<int>({1}));
+    assert(new_graph.GetPrevVertices(1) == std::vector<int>());
+    assert(new_graph.GetPrevVertices(2) == std::vector<int>({0, 1, 4}));
+    assert(new_graph.GetPrevVertices(3) == std::vector<int>({1, 2, 4}));
+    assert(new_graph.GetPrevVertices(4) == std::vector<int>({3}));
+
+    delete graph;
 }
 
-void dfs(const IGraph &graph, void (*callback)(int v))
+template <class Graph>
+void testGraph()
 {
-    std::vector<bool> visited(graph.VerticesCount(), false);
-    for (int vertex = 0; vertex < graph.VerticesCount(); ++vertex)
-    {
-        if (!visited[vertex])
-        {
-            dfs_aux(graph, vertex, visited, callback);
-        }
-    }
+    testGraphMethods<Graph>();
+    testGraphCopyCtor<Graph>();
 }
 
-void bfs(const IGraph &graph, void (*callback)(int v))
+void allTests()
 {
-    std::vector<bool> visited(graph.VerticesCount(), false);
-    std::queue<int> q;
-    for (int vertex = 0; vertex < graph.VerticesCount(); ++vertex)
-    {
-        if (!visited[vertex])
-        {
-            visited[vertex] = true;
-            q.push(vertex);
-            while (!q.empty())
-            {
-                int v = q.front();
-                q.pop();
-                callback(v);
-                std::vector<int> children = graph.GetNextVertices(v);
-                for (auto &child : children)
-                    if (!visited[child])
-                    {
-                        visited[child] = true;
-                        q.push(child);
-                    }
-            }
-        }
-    }
+    testGraph<ListGraph>();
+    testGraph<MatrixGraph>();
+    testGraph<SetGraph>();
+    testGraph<ArcGraph>();
+
+    std::cout << "ALL TESTS PASSED\n";
 }
 
 int main()
 {
-    IGraph *graph = new ListGraph(9);
-    graph->AddEdge(0, 1);
-    graph->AddEdge(1, 5);
-    graph->AddEdge(6, 0);
-    graph->AddEdge(1, 2);
-    graph->AddEdge(2, 3);
-    graph->AddEdge(3, 4);
-    graph->AddEdge(4, 5);
-    graph->AddEdge(0, 7);
-    graph->AddEdge(0, 8);
-
-    std::cout << "----------DFS----------\n";
-    dfs(*graph, [](const int v)
-        { std::cout << v << '\n'; });
-
-    std::cout << "----------BFS----------\n";
-    bfs(*graph, [](const int v)
-        { std::cout << v << '\n'; });
-
-    delete graph;
+    allTests();
     return 0;
 }

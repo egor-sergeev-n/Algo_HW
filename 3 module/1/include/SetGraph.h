@@ -1,12 +1,13 @@
 #pragma once
 #include "IGraph.h"
+#include <unordered_set>
 
-class MatrixGraph : public IGraph
+class SetGraph : public IGraph
 {
 public:
-    MatrixGraph(const int vertices_count);
-    MatrixGraph(const IGraph &graph);
-    ~MatrixGraph();
+    SetGraph(const int vertices_count);
+    SetGraph(const IGraph &graph);
+    ~SetGraph();
 
     void AddEdge(int from, int to);
     int VerticesCount() const;
@@ -14,5 +15,5 @@ public:
     std::vector<int> GetPrevVertices(int vertex) const;
 
 private:
-    std::vector<std::vector<int>> matrix;
+    std::vector<std::unordered_set<int>> vertices;
 };

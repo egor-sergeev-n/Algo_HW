@@ -1,12 +1,12 @@
 #pragma once
 #include "IGraph.h"
 
-class MatrixGraph : public IGraph
+class ArcGraph : public IGraph
 {
 public:
-    MatrixGraph(const int vertices_count);
-    MatrixGraph(const IGraph &graph);
-    ~MatrixGraph();
+    ArcGraph(const int vertices_count);
+    ArcGraph(const IGraph &graph);
+    ~ArcGraph();
 
     void AddEdge(int from, int to);
     int VerticesCount() const;
@@ -14,5 +14,6 @@ public:
     std::vector<int> GetPrevVertices(int vertex) const;
 
 private:
-    std::vector<std::vector<int>> matrix;
+    std::vector<std::pair<int, int>> edges;
+    const int verticesCount;
 };
